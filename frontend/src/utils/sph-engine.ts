@@ -1,4 +1,4 @@
-import type { Particle, SimParams, Preset } from '../types'
+import type { Particle, SimParams, Preset, ChallengeLevel } from '../types'
 
 export const DEFAULT_PARAMS: SimParams = {
   gravity: 9.8,
@@ -47,6 +47,123 @@ export const PRESETS: Preset[] = [
   },
 ]
 
+export const CHALLENGE_LEVELS: ChallengeLevel[] = [
+  {
+    id: 'level1',
+    name: '入门引导',
+    description: '将 60% 以上的流体引导到右下角容器中',
+    difficulty: 'easy',
+    presetName: 'dam',
+    targetZones: [
+      {
+        id: 'zone1',
+        x: 560,
+        y: 380,
+        width: 200,
+        height: 100,
+        label: '目标容器 A',
+        targetCount: 480,
+        color: '#22c55e',
+      },
+    ],
+    timeLimit: 60,
+    successThreshold: 60,
+  },
+  {
+    id: 'level2',
+    name: '双管齐下',
+    description: '将流体分别引导到左右两个目标容器，各 35% 以上',
+    difficulty: 'medium',
+    presetName: 'drop',
+    targetZones: [
+      {
+        id: 'zone1',
+        x: 40,
+        y: 380,
+        width: 180,
+        height: 100,
+        label: '左容器',
+        targetCount: 210,
+        color: '#3b82f6',
+      },
+      {
+        id: 'zone2',
+        x: 580,
+        y: 380,
+        width: 180,
+        height: 100,
+        label: '右容器',
+        targetCount: 210,
+        color: '#22c55e',
+      },
+    ],
+    timeLimit: 75,
+    successThreshold: 70,
+  },
+  {
+    id: 'level3',
+    name: '精准投放',
+    description: '在 90 秒内将 80% 流体引导到顶部的狭窄容器',
+    difficulty: 'hard',
+    presetName: 'fountain',
+    targetZones: [
+      {
+        id: 'zone1',
+        x: 300,
+        y: 20,
+        width: 200,
+        height: 60,
+        label: '高位容器',
+        targetCount: 800,
+        color: '#f59e0b',
+      },
+    ],
+    timeLimit: 90,
+    successThreshold: 80,
+  },
+  {
+    id: 'level4',
+    name: '三分天下',
+    description: '三个目标容器，每个至少收集 25% 流体',
+    difficulty: 'hard',
+    presetName: 'wave',
+    targetZones: [
+      {
+        id: 'zone1',
+        x: 40,
+        y: 400,
+        width: 140,
+        height: 80,
+        label: '容器 A',
+        targetCount: 225,
+        color: '#3b82f6',
+      },
+      {
+        id: 'zone2',
+        x: 330,
+        y: 400,
+        width: 140,
+        height: 80,
+        label: '容器 B',
+        targetCount: 225,
+        color: '#8b5cf6',
+      },
+      {
+        id: 'zone3',
+        x: 620,
+        y: 400,
+        width: 140,
+        height: 80,
+        label: '容器 C',
+        targetCount: 225,
+        color: '#22c55e',
+      },
+    ],
+    timeLimit: 90,
+    successThreshold: 75,
+  },
+]
+
 // SPH Kernel constants
 const PI = Math.PI
 
@@ -89,7 +206,7 @@ export class SPHEngine {
   }
 
   initParticles(config: 'dam' | 'drop' | 'fountain' | 'wave', count?: number) {
-    const n = count ?? this.particles.length || 800
+    const n = count ?? (this.particles.length || 800)
     this.particles = []
 
     switch (config) {
